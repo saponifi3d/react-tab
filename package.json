@@ -1,0 +1,31 @@
+{
+  "name": "react-tab",
+  "version": "0.0.0",
+  "description": "Chrome new tab app built with react",
+  "main": "index.js",
+  "scripts": {
+    "run": "gulp server",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "react",
+    "tab"
+  ],
+  "author": "Josh Callender",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-react": "^2.0.0"
+  },
+  "dependencies": {
+    "backbone": "^1.1.2",
+    "bootstrap": "^3.3.2",
+    "compression": "^1.4.1",
+    "express": "^4.12.0",
+    "hbs": "^2.8.0",
+    "react": "^0.12.2",
+    "serve-static": "^1.9.1",
+    "vinyl-source-stream": "^1.0.0"
+  }
+}
