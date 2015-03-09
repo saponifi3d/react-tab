@@ -1,11 +1,16 @@
-var React = require('react');
+var React = require('react'),
+  Timer = require('./timer.jsx'),
+  Weather = require('./weather.jsx');
 
-var ReactApp = React.createClass({
+var App = React.createClass({
   render: function () {
     return (
-      <div>{this.props.test}</div>
+      <div className="react-app">
+        <Timer time={this.props.time}/>
+        <Weather/>
+      </div>
     );
   }
 });
 
-module.exports.App = ReactApp;
+module.exports = App;

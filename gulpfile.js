@@ -2,7 +2,11 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     watchify = require('watchify'),
     reactify = require('reactify'),
-    source = require('vinyl-source-stream');
+    source = require('vinyl-source-stream'),
+    gutil = require('gulp-util'),
+    nodemon = require('nodemon');
+
+require('colors');
 
 function scripts(watch) {
   var bundle, rebundle;
@@ -22,6 +26,7 @@ function scripts(watch) {
   bundler.transform(reactify);
 
   rebundle = function() {
+    gutil.log('Rebundling')
     var stream = bundler.bundle();
     stream = stream.pipe(source('bundle.js'));
     return stream.pipe(gulp.dest('./dist'));
@@ -37,4 +42,14 @@ gulp.task('build', function () {
 
 gulp.task('watch', function () {
   return scripts(true);
+});
+
+gulp.task('nodemon', ['watch'], function () {
+  return nodemon({
+    verbose: true,
+    watch: [ 'dist/' ],
+    ext: 'hbs jsx',
+  }).on('log', function (log) {
+    gutil.log('[nodemon]'.yellow, log.message)
+  });
 });

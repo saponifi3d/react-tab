@@ -1,10 +1,21 @@
 <html>
   <head>
     <title>New Tab</title>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:700' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Roboto Condensed", "HelveticaNeue-Medium", "Helvetica Neue Medium", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: white;
+        background-size: cover;
+        background-image: url("http://i.imgur.com/S2UwmuF.jpg");
+        -webkit-user-select: none;
+        cursor: default;
+      }
+    </style>
   </head>
   <body>
-    <h1>Test Application</h1>
-    {{{ body }}}
+    <div id="app">{{{ body }}}</div>
   </body>
 
   <script src="/dist/bundle.js"></script>
