@@ -1,7 +1,9 @@
 var React = require('react')
   , WeatherData = require('../lib/weather.js')
   , ForecastWeather = require('./forecast-weather.jsx')
-  , CurrentWeather = require('./current-weather.jsx');
+  , CurrentWeather = require('./current-weather.jsx')
+  , ls = require('./mixins/localstorage-mixin.jsx')
+  , update = require('./mixins/update-mixin.jsx');
 
 var locationStyle = {
   fontFamily: 'Helvetica Neue',
@@ -15,10 +17,35 @@ var locationStyle = {
 
 // move weather fetching up to react-app?
 var Weather = React.createClass({
+  mixins: [ls, update],
+
   getInitialState: function () {
     navigator.geolocation.getCurrentPosition(this.getWeather);
 
     return { location: '' };
+  },
+
+  updateWeather: function (coords) {
+    var data = new WeatherData(coords)
+
+    data.getLocationInfo(function (location, weather) {
+      var displayLocation = location.city + ', ' + location.statecode;
+
+      this.set({
+        '_location': displayLocation
+      , '_id': location.woeid
+      , '_weather': JSON.stringify(weather)
+      , '_refreshAt': Date.now() + this.interval
+      });
+
+      this.setState({
+        location: displayLocation,
+        woeid: location.woeid,
+        forecast: weather.forecast,
+        weather: weather.condition
+      });
+
+    }.bind(this));
   },
 
   // TODO - how do you do good ajaxz with react?
@@ -28,24 +55,8 @@ var Weather = React.createClass({
       , weather = JSON.parse(window.localStorage.getItem('_weather'));
 
     if (!item || isNaN(refreshAt) || refreshAt < Date.now()) {
-      var data = new WeatherData(position.coords)
-
-      data.getLocationInfo(function (location, weather) {
-        var displayLocation = location.city + ', ' + location.statecode;
-
-        window.localStorage.setItem('_location', displayLocation);
-        window.localStorage.setItem('_id', location.woeid)
-        window.localStorage.setItem('_weather', JSON.stringify(weather))
-        window.localStorage.setItem('_refreshAt', Date.now() + 600000)
-
-        this.setState({
-          location: displayLocation,
-          woeid: location.woeid,
-          forecast: weather.forecast,
-          weather: weather.condition
-        })
-      }.bind(this));
-
+      this.updateWeather(position.coords);
+      this.setInterval(this.updateWeather.bind(this, position.coords));
     } else {
       this.setState({
         location: item,
