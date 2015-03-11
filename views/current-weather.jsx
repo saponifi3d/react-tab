@@ -1,4 +1,4 @@
-var React = require('react')
+var React = require('react');
 
 var tempStyle = {
   fontWeight: 'bolder',
@@ -9,7 +9,8 @@ var CurrentWeather = React.createClass({
   render: function () {
     return (
       <div>
-        <span style={tempStyle}>{this.props.weather.temp}° F</span>
+        <div>{this.props.location}</div>
+        <div style={tempStyle}>{this.props.weather.temp + '\u00b0 F'}</div>
       </div>
     );
   }

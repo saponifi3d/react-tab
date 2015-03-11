@@ -1,5 +1,6 @@
 var React = require('react'),
-    moment = require('moment');
+  Weather = require('./weather.jsx'),
+  moment = require('moment');
 
 var containerStyle = {
   position: 'absolute',
@@ -12,13 +13,14 @@ var timeStyle = {
   transform: 'translate(-50%, -70%)',
   fontSize: '200px',
   display: 'block',
-  textShadow: '3px 3px 10px rgba(0,0,0,0.5)'
+  textShadow: '3px 3px 10px rgba(0,0,0,0.5)',
+  width: '450px',
+  textAlign: 'center'
 };
 
 var Timer = React.createClass({
   getInitialState: function () {
-    var time = moment(this.props.time);
-    return { time: time.format('h:mm') }
+    return { time: moment().format('h:mm') }
   },
 
   componentDidMount: function () {
@@ -33,7 +35,10 @@ var Timer = React.createClass({
   render: function () {
     return (
       <div style={containerStyle}>
-        <span style={timeStyle}>{this.state.time}</span>
+        <div style={timeStyle}>
+          <span className="time">{this.state.time}</span>
+          <Weather/>
+        </div>
       </div>
     );
   }

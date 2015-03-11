@@ -1,12 +1,7 @@
 var React = require('react')
   , WeatherData = require('../lib/weather.js')
+  , ForecastWeather = require('./forecast-weather.jsx')
   , CurrentWeather = require('./current-weather.jsx');
-
-var containerStyle = {
-  position: 'absolute',
-  right: '10px',
-  top: '20px'
-};
 
 var locationStyle = {
   fontFamily: 'Helvetica Neue',
@@ -14,7 +9,8 @@ var locationStyle = {
   padding: '10px',
   background: 'rgba(0,0,0,0.5)',
   fontSize: '12px',
-  textAlign: 'right'
+  textAlign: 'right',
+  height: '44px'
 };
 
 // move weather fetching up to react-app?
@@ -27,22 +23,20 @@ var Weather = React.createClass({
 
   // TODO - how do you do good ajaxz with react?
   getWeather: function (position) {
-    var lat = Math.round(position.coords.latitude * 1000) / 1000
-      , lon = Math.round(position.coords.longitude * 1000) / 1000
-      , key = lat + ',' + lon
-      , item = window.localStorage.getItem(key)
-      , refreshAt = parseInt(window.localStorage.getItem('refreshAt'), 10);
+    var item = window.localStorage.getItem('_location')
+      , refreshAt = parseInt(window.localStorage.getItem('_refreshAt'), 10)
+      , weather = JSON.parse(window.localStorage.getItem('_weather'));
 
-    if (!item || refreshAt < Date.now()) {
+    if (!item || isNaN(refreshAt) || refreshAt < Date.now()) {
       var data = new WeatherData(position.coords)
 
       data.getLocationInfo(function (location, weather) {
         var displayLocation = location.city + ', ' + location.statecode;
 
-        window.localStorage.setItem(key, displayLocation);
-        window.localStorage.setItem(key + '_id', location.woeid)
-        window.localStorage.setItem(key + '_weather', JSON.stringify(weather))
-        window.localStorage.setItem('refreshAt', Date.now() + 60000)
+        window.localStorage.setItem('_location', displayLocation);
+        window.localStorage.setItem('_id', location.woeid)
+        window.localStorage.setItem('_weather', JSON.stringify(weather))
+        window.localStorage.setItem('_refreshAt', Date.now() + 600000)
 
         this.setState({
           location: displayLocation,
@@ -53,11 +47,9 @@ var Weather = React.createClass({
       }.bind(this));
 
     } else {
-      var weather = JSON.parse(window.localStorage.getItem(key + '_weather'));
-
       this.setState({
         location: item,
-        woeid: window.localStorage.getItem(key + 'id'),
+        woeid: window.localStorage.getItem('_id'),
         weather: weather.condition,
         forecast: weather.forecast
       })
@@ -66,10 +58,21 @@ var Weather = React.createClass({
 
   displayWeather: function () {
     if (this.state.location) {
+      var len = this.state.forecast.length
+        , forecast = []
+        , i;
+
+      for (i = 0; i < len; i++) {
+        forecast.push(<ForecastWeather key={i} weather={this.state.forecast[i]} />)
+      }
+
       return (
         <div>
-          <CurrentWeather weather={this.state.weather} forecast={this.state.forecast} />
-          <span>{this.state.location}</span>
+          {forecast}
+          <div className="pull-right">
+            <CurrentWeather location={this.state.location} weather={this.state.weather} />
+          </div>
+          <div className="clear-fix"></div>
         </div>
       );
     }
@@ -79,7 +82,7 @@ var Weather = React.createClass({
 
   render: function () {
     return (
-      <div style={containerStyle}>
+      <div>
         <div style={locationStyle}>
           {this.displayWeather()}
         </div>
