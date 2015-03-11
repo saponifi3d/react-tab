@@ -20,9 +20,23 @@ var Weather = React.createClass({
   mixins: [ls, update],
 
   getInitialState: function () {
-    navigator.geolocation.getCurrentPosition(this.getWeather);
+    var refreshAt = parseInt(this.get('_refreshAt'), 10),
+        location = this.get('_location') || '',
+        weather = JSON.parse(this.get('_weather')) || {};
 
-    return { location: '' };
+    if (isNaN(refreshAt) || refreshAt < Date.now()) {
+      navigator.geolocation.getCurrentPosition(this.getWeather);
+    } else {
+      var position = JSON.parse(this.get('_position'));
+      this.getWeather(position);
+    }
+
+    return {
+      location: this.get('_location'),
+      woeid: this.get('_id'),
+      weather: weather.condition,
+      forecast: weather.forecast
+    };
   },
 
   updateWeather: function (coords) {
@@ -36,6 +50,7 @@ var Weather = React.createClass({
       , '_id': location.woeid
       , '_weather': JSON.stringify(weather)
       , '_refreshAt': Date.now() + this.interval
+      , '_position': JSON.stringify({coords: coords })
       });
 
       this.setState({
@@ -48,11 +63,10 @@ var Weather = React.createClass({
     }.bind(this));
   },
 
-  // TODO - how do you do good ajaxz with react?
   getWeather: function (position) {
     var item = window.localStorage.getItem('_location')
-      , refreshAt = parseInt(window.localStorage.getItem('_refreshAt'), 10)
-      , weather = JSON.parse(window.localStorage.getItem('_weather'));
+      , refreshAt = parseInt(this.get('_refreshAt'), 10)
+      , weather = JSON.parse(this.get('_weather'));
 
     if (!item || isNaN(refreshAt) || refreshAt < Date.now()) {
       this.updateWeather(position.coords);

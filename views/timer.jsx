@@ -14,7 +14,7 @@ var timeStyle = {
   fontSize: '200px',
   display: 'block',
   textShadow: '3px 3px 10px rgba(0,0,0,0.5)',
-  width: '450px',
+  minWidth: '450px',
   textAlign: 'center'
 };
 
