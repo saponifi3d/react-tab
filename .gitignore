@@ -2,3 +2,4 @@ node_modules
 *.sw*
 views/*.js
 dist
+.DS_Store
