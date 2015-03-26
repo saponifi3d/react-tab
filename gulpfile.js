@@ -44,7 +44,7 @@ gulp.task('watch', function () {
   return scripts(true);
 });
 
-gulp.task('nodemon', ['watch'], function () {
+gulp.task('serve', ['watch'], function () {
   return nodemon({
     verbose: true,
     watch: [ 'dist/' ],

@@ -94,7 +94,7 @@ var Weather = React.createClass({
       return (
         <div>
           {forecast}
-          <div className="pull-right">
+          <div className="current-weather">
             <CurrentWeather location={this.state.location} weather={this.state.weather} />
           </div>
           <div className="clear-fix"></div>
