@@ -5,7 +5,9 @@ var React = require('react'),
 var containerStyle = {
   position: 'absolute',
   top: '50%',
-  left: '50%'
+  left: '50%',
+  width: 0,
+  height: 0
 };
 
 var timeStyle = {
@@ -13,7 +15,6 @@ var timeStyle = {
   transform: 'translate(-50%, -70%)',
   fontSize: '200px',
   display: 'block',
-  textShadow: '3px 3px 10px rgba(0,0,0,0.5)',
   minWidth: '470px',
   textAlign: 'center'
 };
